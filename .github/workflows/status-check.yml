@@ -2,7 +2,7 @@ name: AmpCart Status Check
 
 on:
   schedule:
-    - cron: "*/5 * * * *"   # runs every 5 minutes
+    - cron: "0 */5 * * *"
   workflow_dispatch:
 
 permissions:
@@ -12,14 +12,23 @@ jobs:
   check:
     runs-on: ubuntu-latest
 
+    env:
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check health endpoint
+      - name: Call Supabase health function
         id: health
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://api.ampcart.com/health || echo "000")
+          STATUS=$(curl -s -X POST https://pfwucwaxfznngtudnfqy.supabase.co/functions/v1/health \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -H "Content-Type: application/json" \
+            -o /dev/null \
+            -w "%{http_code}" \
+            --max-time 10 || echo "000")
+
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
       - name: Generate status.json
@@ -30,10 +39,12 @@ jobs:
             STATE="down"
           fi
 
-          echo "{
-            \"database\": \"$STATE\",
-            \"checked_at\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"
-          }" > status.json
+          cat <<EOF > status.json
+          {
+            "database": "$STATE",
+            "checked_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          }
+          EOF
 
       - name: Commit and push if changed
         run: |
@@ -43,7 +54,7 @@ jobs:
           git add status.json
 
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
             git commit -m "update system status"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
