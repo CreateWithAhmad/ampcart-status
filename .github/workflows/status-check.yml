@@ -16,37 +16,71 @@ jobs:
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
     steps:
-      - name: Checkout repository
+
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Call Supabase health function
-        id: health
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Check Dashboard
+        id: dashboard
         run: |
-          STATUS=$(curl -s -X POST https://pfwucwaxfznngtudnfqy.supabase.co/functions/v1/health \
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://app.ampcart.com || echo 000)
+          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+
+      - name: Check Storefront
+        id: storefront
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://ampcart.com || echo 000)
+          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+
+      - name: Check Checkout
+        id: checkout
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://app.ampcart.com || echo 000)
+          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+
+      - name: Check Database
+        id: database
+        run: |
+          CODE=$(curl -s -X POST https://pfwucwaxfznngtudnfqy.supabase.co/functions/v1/health \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
             -H "Content-Type: application/json" \
             -o /dev/null \
-            -w "%{http_code}" \
-            --max-time 10 || echo "000")
+            -w "%{http_code}" || echo 000)
 
-          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
 
-      - name: Generate status.json
+      - name: Check CDN
+        id: cdn
         run: |
-          if [ "${{ steps.health.outputs.status }}" = "200" ]; then
-            STATE="up"
-          else
-            STATE="down"
-          fi
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+          https://pfwucwaxfznngtudnfqy.supabase.co/storage/v1/object/public/ampcart/admin-product-images/6dd003c5-032d-4647-bf01-3a76b651680e/0.1779850500777832.webp \
+          || echo 000)
 
-          cat <<EOF > status.json
-          {
-            "database": "$STATE",
-            "checked_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          }
-          EOF
+          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
 
-      - name: Commit and push if changed
+      - name: Check Stripe
+        id: stripe
+        run: |
+          STRIPE=$(curl -s https://status.stripe.com/current | jq -r '.statuses.api')
+          if [ "$STRIPE" = "up" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=degraded" >> $GITHUB_OUTPUT; fi
+
+      - name: Update status.json
+        run: |
+          jq '
+          (.groups[] | select(.id=="app") | .services[] | select(.id=="dashboard") | .history[0].status) = "${{ steps.dashboard.outputs.state }}" |
+          (.groups[] | select(.id=="app") | .services[] | select(.id=="storefront") | .history[0].status) = "${{ steps.storefront.outputs.state }}" |
+          (.groups[] | select(.id=="payments") | .services[] | select(.id=="checkout") | .history[0].status) = "${{ steps.checkout.outputs.state }}" |
+          (.groups[] | select(.id=="payments") | .services[] | select(.id=="stripe-connect") | .history[0].status) = "${{ steps.stripe.outputs.state }}" |
+          (.groups[] | select(.id=="infra") | .services[] | select(.id=="database") | .history[0].status) = "${{ steps.database.outputs.state }}" |
+          (.groups[] | select(.id=="infra") | .services[] | select(.id=="cdn") | .history[0].status) = "${{ steps.cdn.outputs.state }}"
+          ' status.json > tmp.json
+
+          mv tmp.json status.json
+
+      - name: Commit changes
         run: |
           git config user.name "ampcart-status-bot"
           git config user.email "bot@ampcart.com"
@@ -56,6 +90,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "update system status"
+            git commit -m "update service status"
             git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
           fi
