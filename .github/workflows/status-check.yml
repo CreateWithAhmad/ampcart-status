@@ -69,6 +69,24 @@ jobs:
 
       - name: Update status.json
         run: |
+
+          TODAY=$(date -u +"%Y-%m-%d")
+          LAST=$(jq -r '.lastUpdated' status.json)
+
+          if [ "$TODAY" != "$LAST" ]; then
+
+            jq '
+            .groups[].services[].history |=
+            ([{day:1,status:"up"}] +
+             (map(.day += 1) | map(select(.day <= 30))))
+            ' status.json > tmp.json
+
+            mv tmp.json status.json
+
+            jq --arg d "$TODAY" '.lastUpdated=$d' status.json > tmp.json
+            mv tmp.json status.json
+          fi
+
           jq '
           (.groups[] | select(.id=="app") | .services[] | select(.id=="dashboard") | .history[0].status) = "${{ steps.dashboard.outputs.state }}" |
           (.groups[] | select(.id=="app") | .services[] | select(.id=="storefront") | .history[0].status) = "${{ steps.storefront.outputs.state }}" |
