@@ -5,7 +5,6 @@
     "website": "https://ampcart.com",
     "support": "mailto:support@ampcart.com"
   },
-
   "groups": [
     {
       "id": "app",
@@ -17,7 +16,10 @@
           "url": "https://app.ampcart.com",
           "uptime": 100,
           "history": [
-            { "day": 1, "status": "up" }
+            {
+              "day": 1,
+              "status": "up"
+            }
           ]
         },
         {
@@ -26,12 +28,14 @@
           "url": "https://ampcart.com",
           "uptime": 100,
           "history": [
-            { "day": 1, "status": "up" }
+            {
+              "day": 1,
+              "status": "down"
+            }
           ]
         }
       ]
     },
-
     {
       "id": "payments",
       "name": "Payments",
@@ -42,7 +46,10 @@
           "url": "https://app.ampcart.com",
           "uptime": 100,
           "history": [
-            { "day": 1, "status": "up" }
+            {
+              "day": 1,
+              "status": "up"
+            }
           ]
         },
         {
@@ -51,12 +58,14 @@
           "url": null,
           "uptime": 100,
           "history": [
-            { "day": 1, "status": "up" }
+            {
+              "day": 1,
+              "status": "up"
+            }
           ]
         }
       ]
     },
-
     {
       "id": "infra",
       "name": "Infrastructure",
@@ -67,7 +76,10 @@
           "url": null,
           "uptime": 100,
           "history": [
-            { "day": 1, "status": "up" }
+            {
+              "day": 1,
+              "status": "up"
+            }
           ]
         },
         {
@@ -76,13 +88,15 @@
           "url": "https://pfwucwaxfznngtudnfqy.supabase.co/storage/v1/object/public/ampcart/admin-product-images/6dd003c5-032d-4647-bf01-3a76b651680e/0.1779850500777832.webp",
           "uptime": 100,
           "history": [
-            { "day": 1, "status": "up" }
+            {
+              "day": 1,
+              "status": "up"
+            }
           ]
         }
       ]
     }
   ],
-
   "incidents": [],
   "maintenance": []
 }
