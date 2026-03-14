@@ -1,0 +1,44 @@
+name: AmpCart Status Check
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"   # every 5 minutes
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Check health endpoint
+        id: health
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://api.ampcart.com/health || echo "000")
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+
+      - name: Update status.json
+        run: |
+          if [ "${{ steps.health.outputs.status }}" = "200" ]; then
+            STATE="up"
+          else
+            STATE="down"
+          fi
+
+          echo "{ \"database\": \"$STATE\", \"checked_at\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\" }" > status.json
+
+      - name: Commit changes
+        run: |
+          git config user.name "ampcart-status-bot"
+          git config user.email "bot@ampcart.com"
+
+          git add status.json
+
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "update system status"
+            git push
+          fi
