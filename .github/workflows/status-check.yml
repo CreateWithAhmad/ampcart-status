@@ -26,77 +26,262 @@ jobs:
       - name: Check Dashboard
         id: dashboard
         run: |
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://app.ampcart.com || echo 000)
-          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+          START=$(date +%s%3N)
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://app.ampcart.com || echo 000)
+          END=$(date +%s%3N)
+          MS=$(( END - START ))
+          if [ "$CODE" = "200" ] && [ "$MS" -lt 3000 ]; then
+            echo "state=up" >> $GITHUB_OUTPUT
+          elif [ "$CODE" = "200" ] && [ "$MS" -ge 3000 ]; then
+            echo "state=degraded" >> $GITHUB_OUTPUT
+            echo "incident=Slow response times" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          else
+            echo "state=down" >> $GITHUB_OUTPUT
+            echo "incident=Service unavailable" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check Storefront
         id: storefront
         run: |
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://ampcart.com || echo 000)
-          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+          START=$(date +%s%3N)
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://ampcart.com || echo 000)
+          END=$(date +%s%3N)
+          MS=$(( END - START ))
+          if [ "$CODE" = "200" ] && [ "$MS" -lt 3000 ]; then
+            echo "state=up" >> $GITHUB_OUTPUT
+          elif [ "$CODE" = "200" ] && [ "$MS" -ge 3000 ]; then
+            echo "state=degraded" >> $GITHUB_OUTPUT
+            echo "incident=Slow response times" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          else
+            echo "state=down" >> $GITHUB_OUTPUT
+            echo "incident=Service unavailable" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check Checkout
         id: checkout
         run: |
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" https://app.ampcart.com || echo 000)
-          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+          START=$(date +%s%3N)
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://app.ampcart.com || echo 000)
+          END=$(date +%s%3N)
+          MS=$(( END - START ))
+          if [ "$CODE" = "200" ] && [ "$MS" -lt 3000 ]; then
+            echo "state=up" >> $GITHUB_OUTPUT
+          elif [ "$CODE" = "200" ] && [ "$MS" -ge 3000 ]; then
+            echo "state=degraded" >> $GITHUB_OUTPUT
+            echo "incident=Elevated checkout latency" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          else
+            echo "state=down" >> $GITHUB_OUTPUT
+            echo "incident=Checkout unavailable" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check Database
         id: database
         run: |
+          START=$(date +%s%3N)
           CODE=$(curl -s -X POST https://pfwucwaxfznngtudnfqy.supabase.co/functions/v1/health \
             -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
             -H "Content-Type: application/json" \
             -o /dev/null \
-            -w "%{http_code}" || echo 000)
-
-          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+            -w "%{http_code}" \
+            --max-time 10 || echo 000)
+          END=$(date +%s%3N)
+          MS=$(( END - START ))
+          if [ "$CODE" = "200" ] && [ "$MS" -lt 3000 ]; then
+            echo "state=up" >> $GITHUB_OUTPUT
+          elif [ "$CODE" = "200" ] && [ "$MS" -ge 3000 ]; then
+            echo "state=degraded" >> $GITHUB_OUTPUT
+            echo "incident=Slow database response" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          else
+            echo "state=down" >> $GITHUB_OUTPUT
+            echo "incident=Database unreachable" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check CDN
         id: cdn
         run: |
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
-          https://pfwucwaxfznngtudnfqy.supabase.co/storage/v1/object/public/ampcart/admin-product-images/6dd003c5-032d-4647-bf01-3a76b651680e/0.1779850500777832.webp \
-          || echo 000)
-
-          if [ "$CODE" = "200" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=down" >> $GITHUB_OUTPUT; fi
+          START=$(date +%s%3N)
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 \
+            https://pfwucwaxfznngtudnfqy.supabase.co/storage/v1/object/public/ampcart/admin-product-images/6dd003c5-032d-4647-bf01-3a76b651680e/0.1779850500777832.webp \
+            || echo 000)
+          END=$(date +%s%3N)
+          MS=$(( END - START ))
+          if [ "$CODE" = "200" ] && [ "$MS" -lt 3000 ]; then
+            echo "state=up" >> $GITHUB_OUTPUT
+          elif [ "$CODE" = "200" ] && [ "$MS" -ge 3000 ]; then
+            echo "state=degraded" >> $GITHUB_OUTPUT
+            echo "incident=Slow asset delivery" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          else
+            echo "state=down" >> $GITHUB_OUTPUT
+            echo "incident=CDN assets unavailable" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          fi
 
       - name: Check Stripe
         id: stripe
         run: |
-          STRIPE=$(curl -s https://status.stripe.com/current | jq -r '.statuses.api')
-          if [ "$STRIPE" = "up" ]; then echo "state=up" >> $GITHUB_OUTPUT; else echo "state=degraded" >> $GITHUB_OUTPUT; fi
+          BODY=$(curl -s --max-time 10 https://status.stripe.com/api/v2/status.json || echo '{}')
+          INDICATOR=$(echo "$BODY" | jq -r '.status.indicator // "unknown"')
+          if [ "$INDICATOR" = "none" ]; then
+            echo "state=up" >> $GITHUB_OUTPUT
+          elif [ "$INDICATOR" = "minor" ] || [ "$INDICATOR" = "maintenance" ]; then
+            echo "state=degraded" >> $GITHUB_OUTPUT
+            echo "incident=Stripe reported degraded performance" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          else
+            echo "state=down" >> $GITHUB_OUTPUT
+            echo "incident=Stripe reported a major outage" >> $GITHUB_OUTPUT
+            echo "duration=ongoing" >> $GITHUB_OUTPUT
+          fi
 
       - name: Update status.json
         run: |
-
           TODAY=$(date -u +"%Y-%m-%d")
+          NOW_UTC=$(date -u +"%b %-d at %I:%M%p UTC" | sed 's/AM/am/;s/PM/pm/')
           LAST=$(jq -r '.lastUpdated' status.json)
 
+          # ── Daily shift ──────────────────────────────────────────────
           if [ "$TODAY" != "$LAST" ]; then
-
             jq '
-            .groups[].services[].history |=
-            ([{day:1,status:"up"}] +
-             (map(.day += 1) | map(select(.day <= 30))))
-            ' status.json > tmp.json
+              .groups[].services[].history |=
+              ([{day:1,status:"up"}] +
+               (map(.day += 1) | map(select(.day <= 30))))
+            ' status.json > tmp.json && mv tmp.json status.json
 
-            mv tmp.json status.json
-
-            jq --arg d "$TODAY" '.lastUpdated=$d' status.json > tmp.json
-            mv tmp.json status.json
+            jq --arg d "$TODAY" '.lastUpdated=$d' status.json > tmp.json && mv tmp.json status.json
           fi
 
-          jq '
-          (.groups[] | select(.id=="app") | .services[] | select(.id=="dashboard") | .history[0].status) = "${{ steps.dashboard.outputs.state }}" |
-          (.groups[] | select(.id=="app") | .services[] | select(.id=="storefront") | .history[0].status) = "${{ steps.storefront.outputs.state }}" |
-          (.groups[] | select(.id=="payments") | .services[] | select(.id=="checkout") | .history[0].status) = "${{ steps.checkout.outputs.state }}" |
-          (.groups[] | select(.id=="payments") | .services[] | select(.id=="stripe-connect") | .history[0].status) = "${{ steps.stripe.outputs.state }}" |
-          (.groups[] | select(.id=="infra") | .services[] | select(.id=="database") | .history[0].status) = "${{ steps.database.outputs.state }}" |
-          (.groups[] | select(.id=="infra") | .services[] | select(.id=="cdn") | .history[0].status) = "${{ steps.cdn.outputs.state }}"
-          ' status.json > tmp.json
+          # ── Write current status + incident fields ───────────────────
+          write_status() {
+            local GROUP="$1" SVC="$2" STATE="$3" INCIDENT="$4"
 
-          mv tmp.json status.json
+            if [ -n "$INCIDENT" ]; then
+              jq \
+                --arg g "$GROUP" --arg s "$SVC" --arg st "$STATE" --arg inc "$INCIDENT" \
+                '(.groups[] | select(.id==$g) | .services[] | select(.id==$s) | .history[0]) |= (.status=$st | .incident=$inc | .duration="ongoing")' \
+                status.json > tmp.json && mv tmp.json status.json
+            else
+              jq \
+                --arg g "$GROUP" --arg s "$SVC" --arg st "$STATE" \
+                '(.groups[] | select(.id==$g) | .services[] | select(.id==$s) | .history[0]) |= (.status=$st | del(.incident) | del(.duration))' \
+                status.json > tmp.json && mv tmp.json status.json
+            fi
+          }
+
+          write_status "app"      "dashboard"    "${{ steps.dashboard.outputs.state }}"  "${{ steps.dashboard.outputs.incident }}"
+          write_status "app"      "storefront"   "${{ steps.storefront.outputs.state }}" "${{ steps.storefront.outputs.incident }}"
+          write_status "payments" "checkout"     "${{ steps.checkout.outputs.state }}"   "${{ steps.checkout.outputs.incident }}"
+          write_status "payments" "stripe-connect" "${{ steps.stripe.outputs.state }}"   "${{ steps.stripe.outputs.incident }}"
+          write_status "infra"    "database"     "${{ steps.database.outputs.state }}"   "${{ steps.database.outputs.incident }}"
+          write_status "infra"    "cdn"          "${{ steps.cdn.outputs.state }}"        "${{ steps.cdn.outputs.incident }}"
+
+          # ── Recalculate uptime % for each service ────────────────────
+          jq '
+            .groups[].services[] |= (
+              . as $svc |
+              ($svc.history | length) as $total |
+              ($svc.history | map(select(.status == "up")) | length) as $up |
+              if $total > 0 then
+                .uptime = (($up / $total) * 100 | round * 100 / 100)
+              else . end
+            )
+          ' status.json > tmp.json && mv tmp.json status.json
+
+          # ── Auto-create incident entry when any service is not up ────
+          MONTH_LABEL=$(date -u +"%B %Y")
+
+          add_incident() {
+            local SVC_NAME="$1" STATE="$2" INCIDENT="$3"
+
+            if [ "$STATE" != "up" ] && [ -n "$INCIDENT" ]; then
+              SEVERITY="degraded"
+              [ "$STATE" = "down" ] && SEVERITY="outage"
+
+              # Only add if the same title isn't already today's open incident
+              ALREADY=$(jq -r \
+                --arg m "$MONTH_LABEL" --arg title "$INCIDENT" \
+                '.incidents[] | select(.month==$m) | .events[] | select(.title==$title and (.updates[0].status != "Resolved"))' \
+                status.json)
+
+              if [ -z "$ALREADY" ]; then
+                jq \
+                  --arg m "$MONTH_LABEL" \
+                  --arg title "$INCIDENT" \
+                  --arg svc "$SVC_NAME" \
+                  --arg sev "$SEVERITY" \
+                  --arg now "$NOW_UTC" \
+                  '
+                  if (.incidents | map(.month) | index($m)) != null then
+                    (.incidents[] | select(.month==$m) | .events) += [{
+                      date: (now | strftime("%b %-d, %Y")),
+                      title: $title,
+                      severity: $sev,
+                      affectedServices: [$svc],
+                      updates: [{
+                        status: "Investigating",
+                        time: $now,
+                        message: ("Automated check detected " + $sev + " status. Engineers notified.")
+                      }]
+                    }]
+                  else
+                    .incidents = [{month: $m, events: [{
+                      date: (now | strftime("%b %-d, %Y")),
+                      title: $title,
+                      severity: $sev,
+                      affectedServices: [$svc],
+                      updates: [{
+                        status: "Investigating",
+                        time: $now,
+                        message: ("Automated check detected " + $sev + " status. Engineers notified.")
+                      }]
+                    }]}] + .incidents
+                  end
+                  ' status.json > tmp.json && mv tmp.json status.json
+              fi
+            fi
+          }
+
+          add_incident "Dashboard"     "${{ steps.dashboard.outputs.state }}"  "${{ steps.dashboard.outputs.incident }}"
+          add_incident "Storefront"    "${{ steps.storefront.outputs.state }}" "${{ steps.storefront.outputs.incident }}"
+          add_incident "Checkout"      "${{ steps.checkout.outputs.state }}"   "${{ steps.checkout.outputs.incident }}"
+          add_incident "Stripe Connect" "${{ steps.stripe.outputs.state }}"    "${{ steps.stripe.outputs.incident }}"
+          add_incident "Database"      "${{ steps.database.outputs.state }}"   "${{ steps.database.outputs.incident }}"
+          add_incident "CDN & Media"   "${{ steps.cdn.outputs.state }}"        "${{ steps.cdn.outputs.incident }}"
+
+          # ── Auto-resolve incidents when service is back up ───────────
+          resolve_incident() {
+            local SVC_NAME="$1" STATE="$2"
+
+            if [ "$STATE" = "up" ]; then
+              jq \
+                --arg m "$MONTH_LABEL" \
+                --arg svc "$SVC_NAME" \
+                --arg now "$NOW_UTC" \
+                '
+                (.incidents[] | select(.month==$m) | .events[] |
+                  select(
+                    (.affectedServices | index($svc)) != null and
+                    (.updates[0].status != "Resolved")
+                  ) | .updates
+                ) |= [{status: "Resolved", time: $now, message: "Service has recovered. All systems operational."}] + .
+                ' status.json > tmp.json && mv tmp.json status.json
+            fi
+          }
+
+          resolve_incident "Dashboard"      "${{ steps.dashboard.outputs.state }}"
+          resolve_incident "Storefront"     "${{ steps.storefront.outputs.state }}"
+          resolve_incident "Checkout"       "${{ steps.checkout.outputs.state }}"
+          resolve_incident "Stripe Connect" "${{ steps.stripe.outputs.state }}"
+          resolve_incident "Database"       "${{ steps.database.outputs.state }}"
+          resolve_incident "CDN & Media"    "${{ steps.cdn.outputs.state }}"
 
       - name: Commit changes
         run: |
