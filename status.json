@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-03-15",
   "company": {
     "name": "AmpCart",
     "logo": "https://app.ampcart.com/assets/logo.jpg",
     "website": "https://ampcart.com",
     "support": "mailto:support@ampcart.com"
   },
+  "lastUpdated": "2026-03-15",
   "groups": [
     {
       "id": "app",
@@ -15,32 +15,76 @@
           "id": "dashboard",
           "name": "Dashboard",
           "url": "https://app.ampcart.com",
-          "uptime": 100,
+          "uptime": 100.00,
           "history": [
-            {
-              "day": 1,
-              "status": "up"
-            },
-            {
-              "day": 2,
-              "status": "up"
-            }
+            { "day": 1,  "status": "up" },
+            { "day": 2,  "status": "up" },
+            { "day": 3,  "status": "up" },
+            { "day": 4,  "status": "up" },
+            { "day": 5,  "status": "up" },
+            { "day": 6,  "status": "up" },
+            { "day": 7,  "status": "up" },
+            { "day": 8,  "status": "up" },
+            { "day": 9,  "status": "up" },
+            { "day": 10, "status": "up" },
+            { "day": 11, "status": "up" },
+            { "day": 12, "status": "up" },
+            { "day": 13, "status": "up" },
+            { "day": 14, "status": "up" },
+            { "day": 15, "status": "up" },
+            { "day": 16, "status": "up" },
+            { "day": 17, "status": "up" },
+            { "day": 18, "status": "up" },
+            { "day": 19, "status": "up" },
+            { "day": 20, "status": "up" },
+            { "day": 21, "status": "up" },
+            { "day": 22, "status": "up" },
+            { "day": 23, "status": "up" },
+            { "day": 24, "status": "up" },
+            { "day": 25, "status": "up" },
+            { "day": 26, "status": "up" },
+            { "day": 27, "status": "up" },
+            { "day": 28, "status": "up" },
+            { "day": 29, "status": "up" },
+            { "day": 30, "status": "up" }
           ]
         },
         {
           "id": "storefront",
           "name": "Storefront",
           "url": "https://ampcart.com",
-          "uptime": 100,
+          "uptime": 100.00,
           "history": [
-            {
-              "day": 1,
-              "status": "down"
-            },
-            {
-              "day": 2,
-              "status": "down"
-            }
+            { "day": 1,  "status": "up" },
+            { "day": 2,  "status": "up" },
+            { "day": 3,  "status": "up" },
+            { "day": 4,  "status": "up" },
+            { "day": 5,  "status": "up" },
+            { "day": 6,  "status": "up" },
+            { "day": 7,  "status": "up" },
+            { "day": 8,  "status": "up" },
+            { "day": 9,  "status": "up" },
+            { "day": 10, "status": "up" },
+            { "day": 11, "status": "up" },
+            { "day": 12, "status": "up" },
+            { "day": 13, "status": "up" },
+            { "day": 14, "status": "up" },
+            { "day": 15, "status": "up" },
+            { "day": 16, "status": "up" },
+            { "day": 17, "status": "up" },
+            { "day": 18, "status": "up" },
+            { "day": 19, "status": "up" },
+            { "day": 20, "status": "up" },
+            { "day": 21, "status": "up" },
+            { "day": 22, "status": "up" },
+            { "day": 23, "status": "up" },
+            { "day": 24, "status": "up" },
+            { "day": 25, "status": "up" },
+            { "day": 26, "status": "up" },
+            { "day": 27, "status": "up" },
+            { "day": 28, "status": "up" },
+            { "day": 29, "status": "up" },
+            { "day": 30, "status": "up" }
           ]
         }
       ]
@@ -53,32 +97,76 @@
           "id": "checkout",
           "name": "Checkout",
           "url": "https://app.ampcart.com",
-          "uptime": 100,
+          "uptime": 100.00,
           "history": [
-            {
-              "day": 1,
-              "status": "up"
-            },
-            {
-              "day": 2,
-              "status": "up"
-            }
+            { "day": 1,  "status": "up" },
+            { "day": 2,  "status": "up" },
+            { "day": 3,  "status": "up" },
+            { "day": 4,  "status": "up" },
+            { "day": 5,  "status": "up" },
+            { "day": 6,  "status": "up" },
+            { "day": 7,  "status": "up" },
+            { "day": 8,  "status": "up" },
+            { "day": 9,  "status": "up" },
+            { "day": 10, "status": "up" },
+            { "day": 11, "status": "up" },
+            { "day": 12, "status": "up" },
+            { "day": 13, "status": "up" },
+            { "day": 14, "status": "up" },
+            { "day": 15, "status": "up" },
+            { "day": 16, "status": "up" },
+            { "day": 17, "status": "up" },
+            { "day": 18, "status": "up" },
+            { "day": 19, "status": "up" },
+            { "day": 20, "status": "up" },
+            { "day": 21, "status": "up" },
+            { "day": 22, "status": "up" },
+            { "day": 23, "status": "up" },
+            { "day": 24, "status": "up" },
+            { "day": 25, "status": "up" },
+            { "day": 26, "status": "up" },
+            { "day": 27, "status": "up" },
+            { "day": 28, "status": "up" },
+            { "day": 29, "status": "up" },
+            { "day": 30, "status": "up" }
           ]
         },
         {
           "id": "stripe-connect",
           "name": "Stripe Connect",
           "url": null,
-          "uptime": 100,
+          "uptime": 100.00,
           "history": [
-            {
-              "day": 1,
-              "status": "up"
-            },
-            {
-              "day": 2,
-              "status": "up"
-            }
+            { "day": 1,  "status": "up" },
+            { "day": 2,  "status": "up" },
+            { "day": 3,  "status": "up" },
+            { "day": 4,  "status": "up" },
+            { "day": 5,  "status": "up" },
+            { "day": 6,  "status": "up" },
+            { "day": 7,  "status": "up" },
+            { "day": 8,  "status": "up" },
+            { "day": 9,  "status": "up" },
+            { "day": 10, "status": "up" },
+            { "day": 11, "status": "up" },
+            { "day": 12, "status": "up" },
+            { "day": 13, "status": "up" },
+            { "day": 14, "status": "up" },
+            { "day": 15, "status": "up" },
+            { "day": 16, "status": "up" },
+            { "day": 17, "status": "up" },
+            { "day": 18, "status": "up" },
+            { "day": 19, "status": "up" },
+            { "day": 20, "status": "up" },
+            { "day": 21, "status": "up" },
+            { "day": 22, "status": "up" },
+            { "day": 23, "status": "up" },
+            { "day": 24, "status": "up" },
+            { "day": 25, "status": "up" },
+            { "day": 26, "status": "up" },
+            { "day": 27, "status": "up" },
+            { "day": 28, "status": "up" },
+            { "day": 29, "status": "up" },
+            { "day": 30, "status": "up" }
           ]
         }
       ]
@@ -91,37 +179,89 @@
           "id": "database",
           "name": "Database",
           "url": null,
-          "uptime": 100,
+          "uptime": 100.00,
           "history": [
-            {
-              "day": 1,
-              "status": "up"
-            },
-            {
-              "day": 2,
-              "status": "up"
-            }
+            { "day": 1,  "status": "up" },
+            { "day": 2,  "status": "up" },
+            { "day": 3,  "status": "up" },
+            { "day": 4,  "status": "up" },
+            { "day": 5,  "status": "up" },
+            { "day": 6,  "status": "up" },
+            { "day": 7,  "status": "up" },
+            { "day": 8,  "status": "up" },
+            { "day": 9,  "status": "up" },
+            { "day": 10, "status": "up" },
+            { "day": 11, "status": "up" },
+            { "day": 12, "status": "up" },
+            { "day": 13, "status": "up" },
+            { "day": 14, "status": "up" },
+            { "day": 15, "status": "up" },
+            { "day": 16, "status": "up" },
+            { "day": 17, "status": "up" },
+            { "day": 18, "status": "up" },
+            { "day": 19, "status": "up" },
+            { "day": 20, "status": "up" },
+            { "day": 21, "status": "up" },
+            { "day": 22, "status": "up" },
+            { "day": 23, "status": "up" },
+            { "day": 24, "status": "up" },
+            { "day": 25, "status": "up" },
+            { "day": 26, "status": "up" },
+            { "day": 27, "status": "up" },
+            { "day": 28, "status": "up" },
+            { "day": 29, "status": "up" },
+            { "day": 30, "status": "up" }
           ]
         },
         {
           "id": "cdn",
           "name": "CDN & Media",
           "url": "https://pfwucwaxfznngtudnfqy.supabase.co/storage/v1/object/public/ampcart/admin-product-images/6dd003c5-032d-4647-bf01-3a76b651680e/0.1779850500777832.webp",
-          "uptime": 100,
+          "uptime": 100.00,
           "history": [
-            {
-              "day": 1,
-              "status": "up"
-            },
-            {
-              "day": 2,
-              "status": "up"
-            }
+            { "day": 1,  "status": "up" },
+            { "day": 2,  "status": "up" },
+            { "day": 3,  "status": "up" },
+            { "day": 4,  "status": "up" },
+            { "day": 5,  "status": "up" },
+            { "day": 6,  "status": "up" },
+            { "day": 7,  "status": "up" },
+            { "day": 8,  "status": "up" },
+            { "day": 9,  "status": "up" },
+            { "day": 10, "status": "up" },
+            { "day": 11, "status": "up" },
+            { "day": 12, "status": "up" },
+            { "day": 13, "status": "up" },
+            { "day": 14, "status": "up" },
+            { "day": 15, "status": "up" },
+            { "day": 16, "status": "up" },
+            { "day": 17, "status": "up" },
+            { "day": 18, "status": "up" },
+            { "day": 19, "status": "up" },
+            { "day": 20, "status": "up" },
+            { "day": 21, "status": "up" },
+            { "day": 22, "status": "up" },
+            { "day": 23, "status": "up" },
+            { "day": 24, "status": "up" },
+            { "day": 25, "status": "up" },
+            { "day": 26, "status": "up" },
+            { "day": 27, "status": "up" },
+            { "day": 28, "status": "up" },
+            { "day": 29, "status": "up" },
+            { "day": 30, "status": "up" }
           ]
         }
       ]
     }
   ],
-  "incidents": [],
-  "maintenance": []
+  "incidents": [
+    { "month": "March 2026",   "events": [] },
+    { "month": "February 2026","events": [] },
+    { "month": "January 2026", "events": [] }
+  ],
+  "maintenance": [
+    { "month": "March 2026", "events": [] },
+    { "month": "April 2026", "events": [] },
+    { "month": "May 2026",   "events": [] }
+  ]
 }
