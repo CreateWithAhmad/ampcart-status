@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-14",
+  "lastUpdated": "2026-03-15",
   "company": {
     "name": "AmpCart",
     "logo": "https://app.ampcart.com/assets/logo.jpg",
@@ -20,6 +20,10 @@
             {
               "day": 1,
               "status": "up"
+            },
+            {
+              "day": 2,
+              "status": "up"
             }
           ]
         },
@@ -31,6 +35,10 @@
           "history": [
             {
               "day": 1,
+              "status": "down"
+            },
+            {
+              "day": 2,
               "status": "down"
             }
           ]
@@ -50,6 +58,10 @@
             {
               "day": 1,
               "status": "up"
+            },
+            {
+              "day": 2,
+              "status": "up"
             }
           ]
         },
@@ -61,6 +73,10 @@
           "history": [
             {
               "day": 1,
+              "status": "up"
+            },
+            {
+              "day": 2,
               "status": "up"
             }
           ]
@@ -80,6 +96,10 @@
             {
               "day": 1,
               "status": "up"
+            },
+            {
+              "day": 2,
+              "status": "up"
             }
           ]
         },
@@ -91,6 +111,10 @@
           "history": [
             {
               "day": 1,
+              "status": "up"
+            },
+            {
+              "day": 2,
               "status": "up"
             }
           ]
